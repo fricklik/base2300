@@ -40,10 +40,44 @@ packages or deploy a website automatically.
 
 ## Package release
 
-Confirm the chosen npm name and publisher account, review `npm pack --dry-run`,
-and publish only the reviewed release. Tag the exact released commit. Keep
-package version and wire version separate: a package patch must not silently
-change an existing alphabet, header assignment or decoder meaning.
+Keep package version and wire version separate: a package patch must not
+silently change an existing alphabet, header assignment or decoder meaning.
+`prepublishOnly` runs `npm run check`, so a failing build or test blocks
+`npm publish`.
+
+### First release (manual, once)
+
+npm Trusted Publishing is configured in the package settings on npmjs.com, so
+the package has to exist before it can be enabled. Publish the first version
+from a logged-in machine:
+
+```sh
+npm login
+npm run check
+npm pack --dry-run          # review the file list
+npm publish --access public
+git tag v0.1.0 && git push origin v0.1.0
+```
+
+Then open the package on npmjs.com → Settings → *Trusted Publisher* and add:
+
+- Publisher: GitHub Actions
+- Organization or user: `fricklik`
+- Repository: `base2300`
+- Workflow filename: `publish.yml` (filename only)
+- Environment name: leave empty
+
+### Later releases (GitHub Actions, no token)
+
+1. Bump `version` in `package.json` and describe the release in `CHANGELOG.md`.
+2. Commit, then tag the exact commit with the same version: `git tag v1.2.3`.
+3. `git push origin main v1.2.3`.
+
+`.github/workflows/publish.yml` runs on `v*` tags: it checks that the tag
+matches `package.json`, runs `npm ci`, `npm run check` and `npm pack --dry-run`,
+then `npm publish --access public` through OIDC (`id-token: write`). npm
+generates provenance attestations automatically for public repositories.
+The workflow needs npm ≥ 11.5.1 and installs the latest npm on Node 24.
 
 ## Browser demo
 

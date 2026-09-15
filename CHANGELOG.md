@@ -25,6 +25,9 @@ package, GitHub release or hosted playground has been published.
 - Translate source, test, demo and script comments from Japanese to English.
   Runtime strings, error messages and the playground UI text are unchanged.
 - Record the public repository, first CI matrix run and browser verification.
+- Add `prepublishOnly` (runs `npm run check`) and a tag-driven
+  `publish.yml` workflow that publishes through npm Trusted Publishing (OIDC).
+  The first release is still published manually; see `docs/releasing.md`.
 - Playground: English is now the default UI language. A header toggle switches
   to Japanese; the choice persists in `localStorage` and `?lang=ja` / `?lang=en`
   override it. Worker notes, labels and error messages follow the page language.
