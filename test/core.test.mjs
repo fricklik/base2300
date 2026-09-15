@@ -32,6 +32,15 @@ test('alphabet order, uniqueness, normalization and CRC32 are fixed', () => {
   assert.equal(crc32(utf8('123456789')), 0xcbf43926);
 });
 
+test('encode accepts Uint8Array values created in another realm', async () => {
+  const { runInNewContext } = await import('node:vm');
+  const foreign = runInNewContext('new Uint8Array([0x66, 0x6f, 0x6f])');
+  assert.equal(foreign instanceof Uint8Array, false);
+  assert.equal(encode(foreign), 'あx陽栽粋起');
+  assert.throws(() => encode('foo'), TypeError);
+  assert.throws(() => encode(new Uint16Array(2)), TypeError);
+});
+
 test('alphabet building blocks are exported and compose the fixed alphabet', () => {
   assert.equal(BASE64_ALPHABET.length, 64);
   assert.equal([...JOYO_KANJI].length, 2136);

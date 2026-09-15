@@ -1,6 +1,14 @@
 # Changelog
 
-## Unreleased (0.1.1)
+## 0.1.2 (2026-09-15)
+
+- `encode` accepts `Uint8Array` values created in another realm (iframes,
+  jsdom, `vm` contexts), where `instanceof Uint8Array` is false. Other typed
+  arrays and strings are still rejected with a `TypeError`.
+
+## 0.1.1 (2026-09-15)
+
+Published through npm Trusted Publishing from tag `v0.1.1`.
 
 - Export the alphabet building blocks `BASE64_ALPHABET`, `JOYO_KANJI` and
   `BASE2200_ALPHABET` from the root entry so downstream projects can derive

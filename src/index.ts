@@ -13,9 +13,14 @@ export { BASE2300_ALPHABET, BASE2300_HIRAGANA, BASE2300_KATAKANA } from "./base2
 // Alphabet building blocks, exported so downstream code can build derived tables without copying the data.
 export { BASE64_ALPHABET, JOYO_KANJI, BASE2200_ALPHABET } from "./base2200Alphabet.js";
 
+/** Accept Uint8Array values from other realms too (iframes, jsdom, vm contexts), where instanceof fails. */
+function isUint8Array(value: unknown): value is Uint8Array {
+  return value instanceof Uint8Array || Object.prototype.toString.call(value) === "[object Uint8Array]";
+}
+
 /** Encode arbitrary bytes; choose the shorter checked text or binary representation. */
 export function encode(input: Uint8Array): string {
-  if (!(input instanceof Uint8Array)) throw new TypeError("encode expects a Uint8Array.");
+  if (!isUint8Array(input)) throw new TypeError("encode expects a Uint8Array.");
   return encodeBytes(input);
 }
 
