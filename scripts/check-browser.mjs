@@ -29,7 +29,7 @@ try {
     await page.locator('#input').fill(input);
     await page.locator('#run').click();
     await page.locator('#result').waitFor({ state: 'visible' });
-    assert.match(await page.locator('#result-note').innerText(), /原バイトとの一致を確認/);
+    assert.match(await page.locator('#result-note').innerText(), /Byte-exact round trip confirmed/);
     await page.locator('#roundtrip').click();
     await page.waitForFunction(expected => !document.querySelector('#result').hidden && document.querySelector('#output').value === expected, input);
   }
@@ -46,6 +46,23 @@ try {
   assert.match(await page.locator('#status').innerText(), /64 KiB/);
   await page.setViewportSize({ width: 390, height: 844 });
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+  // Language: English by default, Japanese via the toggle (persisted) and via ?lang=ja.
+  assert.equal(await page.evaluate(() => document.documentElement.lang), 'en');
+  assert.match(await page.locator('h1').innerText(), /How few characters/);
+  await page.locator('#lang').click();
+  assert.equal(await page.evaluate(() => document.documentElement.lang), 'ja');
+  assert.match(await page.locator('h1').innerText(), /文字は、どこまで/);
+  await page.locator('[data-sample="default"]').click();
+  await page.locator('#run').click();
+  await page.locator('#result').waitFor({ state: 'visible' });
+  assert.match(await page.locator('#result-note').innerText(), /原バイトとの一致を確認/);
+  await page.reload();
+  assert.equal(await page.evaluate(() => document.documentElement.lang), 'ja');
+  await page.goto(`${origin}/demo/?lang=en`);
+  assert.equal(await page.evaluate(() => document.documentElement.lang), 'en');
+  await page.evaluate(() => localStorage.clear());
+  await page.goto(`${origin}/demo/`);
+  assert.equal(await page.evaluate(() => document.documentElement.lang), 'en');
   const screenshot = process.env.BASE2300_SCREENSHOT;
   if (screenshot) {
     await page.locator('[data-sample="default"]').click();

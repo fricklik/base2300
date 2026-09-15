@@ -1,4 +1,5 @@
 import { measureText } from '../dist/index.js';
+import { translate, resolveLanguage, saveLanguage } from './i18n.js';
 
 const $ = id => document.getElementById(id);
 const samples = {
@@ -9,6 +10,8 @@ const samples = {
   repeat: '同じ情報を、少ない文字で。'.repeat(40),
   empty: '',
 };
+let lang = resolveLanguage(location, globalThis.localStorage);
+const t = (key, params) => translate(lang, key, params);
 let worker = null;
 let timer = null;
 let lastAction = null;
@@ -16,7 +19,17 @@ let lastOutput = null;
 function status(message, error = false) { $('status').textContent = message; $('status').classList.toggle('error', error); }
 function measureInput() {
   const m = measureText($('input').value);
-  $('input-metrics').textContent = `${m.codePoints.toLocaleString()} 文字 / ${m.utf8Bytes.toLocaleString()} B`;
+  $('input-metrics').textContent = t('inputMetrics', { chars: m.codePoints.toLocaleString(), bytes: m.utf8Bytes.toLocaleString() });
+}
+function profileHint() { $('profile-hint').textContent = t($('profile').value === 'checked' ? 'hintChecked' : 'hintExperimental'); }
+// Apply the static UI strings for the current language. Dynamic texts (status, result) are produced with t() when they appear.
+function applyLanguage() {
+  document.documentElement.lang = lang;
+  for (const element of document.querySelectorAll('[data-i18n]')) element.textContent = t(element.dataset.i18n);
+  for (const element of document.querySelectorAll('[data-i18n-html]')) element.innerHTML = t(element.dataset.i18nHtml);
+  for (const element of document.querySelectorAll('[data-i18n-aria]')) element.setAttribute('aria-label', t(element.dataset.i18nAria));
+  profileHint();
+  measureInput();
 }
 function stop() {
   worker?.terminate(); worker = null; clearTimeout(timer);
@@ -26,21 +39,21 @@ function clearResult() { $('result').hidden = true; lastAction = null; lastOutpu
 function run() {
   stop(); clearResult();
   $('run').disabled = true; $('cancel').disabled = false;
-  status('変換と復元検査を実行中…');
+  status(t('statusRunning'));
   let activeWorker;
   try {
     activeWorker = new Worker(new URL('./worker.js', import.meta.url), { type: 'module' });
     worker = activeWorker;
   } catch (error) {
-    stop(); status(error.message || 'Workerの起動に失敗しました。', true); return;
+    stop(); status(error.message || t('statusWorkerStart'), true); return;
   }
   timer = setTimeout(() => {
     if (worker !== activeWorker) return;
-    stop(); status('30秒で処理を中止しました。入力を短くして再試行できます。', true);
+    stop(); status(t('statusTimeout'), true);
   }, 30000);
   activeWorker.onerror = event => {
     if (worker !== activeWorker) return;
-    stop(); status(event.message || 'Workerの起動に失敗しました。', true);
+    stop(); status(event.message || t('statusWorkerStart'), true);
   };
   activeWorker.onmessage = ({ data }) => {
     if (worker !== activeWorker) return;
@@ -60,20 +73,26 @@ function run() {
     lastAction = data.action;
     $('roundtrip').hidden = lastAction !== 'encode';
     $('result').hidden = false;
-    status(`完了 · ${Math.round(data.milliseconds)} ms（Worker起動時間を除く）`);
+    status(t('statusDone', { ms: Math.round(data.milliseconds) }));
   };
-  try { activeWorker.postMessage({ action: $('action').value, profile: $('profile').value, input: $('input').value }); }
-  catch (error) { stop(); status(error.message || 'Workerへ入力を渡せませんでした。', true); }
+  try { activeWorker.postMessage({ action: $('action').value, profile: $('profile').value, input: $('input').value, lang }); }
+  catch (error) { stop(); status(error.message || t('statusPostFailed'), true); }
 }
 $('run').addEventListener('click', run);
-$('cancel').addEventListener('click', () => { stop(); status('中止しました。'); });
-$('input').addEventListener('input', () => { stop(); measureInput(); clearResult(); status('入力を更新しました。'); });
+$('cancel').addEventListener('click', () => { stop(); status(t('statusCancelled')); });
+$('input').addEventListener('input', () => { stop(); measureInput(); clearResult(); status(t('statusInputUpdated')); });
 for (const button of document.querySelectorAll('[data-sample]')) button.addEventListener('click', () => {
-  stop(); $('input').value = samples[button.dataset.sample]; $('action').value = 'encode'; measureInput(); clearResult(); status('サンプルを読み込みました。');
+  stop(); $('input').value = samples[button.dataset.sample]; $('action').value = 'encode'; measureInput(); clearResult(); status(t('statusSampleLoaded'));
 });
 for (const id of ['action', 'profile']) $(id).addEventListener('change', () => {
-  stop(); clearResult(); status('設定を更新しました。');
-  $('profile-hint').textContent = $('profile').value === 'checked' ? '基本形式はチェックサムで偶発的な破損を検査します。暗号化は行いません。' : '実験形式は予測圧縮などを比較します。CRCを省くため、転送後の誤記や破損を検出できない場合があります。';
+  stop(); clearResult(); status(t('statusSettingsUpdated'));
+  profileHint();
+});
+$('lang').addEventListener('click', () => {
+  lang = lang === 'ja' ? 'en' : 'ja';
+  saveLanguage(globalThis.localStorage, lang);
+  // Result texts came from the Worker in the previous language; clear them rather than show a mixed page.
+  stop(); clearResult(); applyLanguage(); status(t('statusIdle'));
 });
 $('roundtrip').addEventListener('click', () => {
   if (lastAction !== 'encode') return;
@@ -85,11 +104,12 @@ $('copy').addEventListener('click', async () => {
   try {
     // textarea displays CRLF as LF; keep the worker's original string for copying.
     await navigator.clipboard.writeText(output);
-    if (lastOutput === output) status('結果をコピーしました。貼り付け先によって改行形式が変わる場合があります。');
+    if (lastOutput === output) status(t('statusCopied'));
   } catch {
     if (lastOutput !== output) return;
     $('output').focus(); $('output').select();
-    status('結果を選択しました。手動コピーでは改行形式が変わる場合があります。厳密なバイト保存にはCLIを使用してください。');
+    status(t('statusSelected'));
   }
 });
-measureInput();
+applyLanguage();
+status(t('statusIdle'));

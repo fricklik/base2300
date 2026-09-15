@@ -50,7 +50,8 @@ npm run demo
 
 Open **http://127.0.0.1:2300/demo/**. The playground compares code points,
 UTF-8 bytes, UTF-16 units and graphemes, verifies exact byte recovery, and runs
-conversion in a cancellable Worker. The demo caps source/decoded bytes at 64 KiB;
+conversion in a cancellable Worker. The UI is English by default; a header
+toggle switches to Japanese (`?lang=ja` also works). The demo caps source/decoded bytes at 64 KiB;
 the library caps them at 4 MiB. Encoded text has a separate, larger bound.
 No hosted demo or npm publication is assumed by these instructions.
 

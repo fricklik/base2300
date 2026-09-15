@@ -1,45 +1,45 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
-  <title>Base2300 — 文字数をめぐる実験</title>
+  <title data-i18n="title">Base2300 — an experiment in character count</title>
   <link rel="stylesheet" href="./style.css">
   <script type="module" src="./app.js"></script>
 </head>
 <body>
   <main>
-    <header><a class="brand" href="./">base<span>2300</span></a><span class="tag">OPEN SOURCE EXPERIMENT</span></header>
+    <header><a class="brand" href="./">base<span>2300</span></a><div class="header-right"><button id="lang" class="lang" type="button" data-i18n="langToggle" data-i18n-aria="langToggleAria" aria-label="Switch to Japanese">日本語</button><span class="tag">OPEN SOURCE EXPERIMENT</span></div></header>
     <section class="intro">
       <p class="eyebrow">2,300 SYMBOLS · ONE QUESTION</p>
-      <h1>文字は、どこまで<br><em>少なくできる？</em></h1>
-      <p>同じ情報を2,300種類の文字に詰め直す、小さな実験室。<br>文字数とデータ容量を並べて、可逆変換の性質を確かめます。</p>
+      <h1 data-i18n-html="headline">How few characters<br><em>can hold the same data?</em></h1>
+      <p data-i18n-html="intro">A small lab that repacks the same information into 2,300 symbols.<br>It puts character count and byte size side by side and checks that the conversion is reversible.</p>
     </section>
-    <section class="lab" aria-label="Base2300変換">
+    <section class="lab" id="lab" aria-label="Base2300 conversion" data-i18n-aria="labAria">
       <div class="toolbar">
-        <label>操作<select id="action"><option value="encode">テキストを変換</option><option value="decode">Base2300を復元</option></select></label>
-        <label>形式<select id="profile"><option value="checked">基本形式 · CRC32付き</option><option value="experimental">文字数を最小化 · CRCなし</option></select></label>
+        <label><span data-i18n="action">Action</span><select id="action"><option value="encode" data-i18n="actionEncode">Encode text</option><option value="decode" data-i18n="actionDecode">Decode Base2300</option></select></label>
+        <label><span data-i18n="profile">Format</span><select id="profile"><option value="checked" data-i18n="profileChecked">Checked · with CRC32</option><option value="experimental" data-i18n="profileExperimental">Minimize characters · no CRC</option></select></label>
       </div>
-      <p class="hint" id="profile-hint">基本形式はチェックサムで偶発的な破損を検査します。暗号化は行いません。</p>
-      <div class="samples" aria-label="サンプル入力"><span>試す：</span><button data-sample="default">標準</button><button data-sample="english">英語</button><button data-sample="japanese">日本語</button><button data-sample="emoji">絵文字</button><button data-sample="repeat">繰り返し</button><button data-sample="empty">空文字</button></div>
-      <label class="area-label" for="input">入力 <span id="input-metrics"></span></label>
+      <p class="hint" id="profile-hint">The checked format detects accidental corruption with a checksum. It does not encrypt.</p>
+      <div class="samples" aria-label="Sample inputs" data-i18n-aria="samplesAria"><span data-i18n="samplesLabel">Try:</span><button data-sample="default" data-i18n="sampleDefault">Default</button><button data-sample="english" data-i18n="sampleEnglish">English</button><button data-sample="japanese" data-i18n="sampleJapanese">Japanese</button><button data-sample="emoji" data-i18n="sampleEmoji">Emoji</button><button data-sample="repeat" data-i18n="sampleRepeat">Repetition</button><button data-sample="empty" data-i18n="sampleEmpty">Empty</button></div>
+      <label class="area-label" for="input"><span data-i18n="input">Input</span> <span id="input-metrics"></span></label>
       <textarea id="input" spellcheck="false" rows="5">Base2300 packs the same bytes into fewer characters.</textarea>
-      <div class="run-row"><button class="primary" id="run">変換する</button><button id="cancel" disabled>中止</button><span id="status" role="status" aria-live="polite">入力はこのブラウザー内で処理します。</span></div>
+      <div class="run-row"><button class="primary" id="run" data-i18n="run">Run</button><button id="cancel" disabled data-i18n="cancel">Cancel</button><span id="status" role="status" aria-live="polite">Input is processed inside this browser.</span></div>
       <section id="result" hidden>
-        <div class="result-title"><h2>変換結果</h2><button id="copy">結果をコピー</button><button id="roundtrip">この結果を復元</button></div>
-        <textarea id="output" readonly spellcheck="false" rows="4" aria-label="変換結果"></textarea>
+        <div class="result-title"><h2 data-i18n="resultTitle">Result</h2><button id="copy" data-i18n="copy">Copy result</button><button id="roundtrip" data-i18n="roundtrip">Decode this result</button></div>
+        <textarea id="output" readonly spellcheck="false" rows="4" aria-label="Result" data-i18n-aria="outputAria"></textarea>
         <p class="hint" id="result-note"></p>
-        <div class="table-wrap"><table><caption>全文の長さ比較（識別子・チェックサムを含む）</caption><thead><tr><th>表現</th><th>文字数¹</th><th>UTF-8</th><th>UTF-16単位</th><th>書記素²</th></tr></thead><tbody id="comparison"></tbody></table></div>
-        <p class="hint">¹ Unicodeコードポイント数。 ² 見た目の文字の区切り。表示幅やAIのトークン数とは異なります。</p>
+        <div class="table-wrap"><table><caption data-i18n="tableCaption">Full-length comparison (including identifier and checksum)</caption><thead><tr><th data-i18n="thRepresentation">Representation</th><th data-i18n="thChars">Characters¹</th><th data-i18n="thUtf8">UTF-8</th><th data-i18n="thUtf16">UTF-16 units</th><th data-i18n="thGraphemes">Graphemes²</th></tr></thead><tbody id="comparison"></tbody></table></div>
+        <p class="hint" data-i18n="footnote">¹ Unicode code points. ² Visible character boundaries. Neither equals display width or AI token count.</p>
       </section>
     </section>
     <section class="notes">
-      <article><span class="number">01</span><h2>減るものを、確かめる。</h2><p>文字が減っても、UTF-8のバイト数は増えることがあります。短い入力や絵文字では、文字数自体も増えます。</p></article>
-      <article><span class="number">02</span><h2>元の情報を、そのまま。</h2><p>変換後に原バイトへ戻ることを検査します。CRCなし形式では、後から生じた誤記や破損を検出できない場合があります。</p></article>
-      <article><span class="number">03</span><h2>探究心から、始める。</h2><p>コードポイント数に制約がある自作ツール、Unicodeの学習、符号方式の比較に。転送先の数え方と文字の保持を確かめて使います。</p></article>
+      <article><span class="number">01</span><h2 data-i18n="note1Title">Measure what shrinks.</h2><p data-i18n="note1Body">Even when characters go down, UTF-8 bytes can go up. Short inputs and emoji can grow in character count too.</p></article>
+      <article><span class="number">02</span><h2 data-i18n="note2Title">Keep the data intact.</h2><p data-i18n="note2Body">Every conversion is checked against the original bytes. CRC-free formats may not detect later typos or corruption.</p></article>
+      <article><span class="number">03</span><h2 data-i18n="note3Title">Start from curiosity.</h2><p data-i18n="note3Body">For homemade tools with code-point limits, learning Unicode and comparing encodings. Check how the destination counts and preserves characters before relying on it.</p></article>
     </section>
-    <footer><span>Base2300 · MIT + Unicode-3.0</span><span>元テキスト／復元結果上限 64 KiB · 実験形式はネイティブ圧縮の対応状況で結果が変わります</span></footer>
+    <footer><span>Base2300 · MIT + Unicode-3.0</span><span data-i18n="footerLimits">Source/decoded limit 64 KiB · Experimental results vary with native compression support</span></footer>
   </main>
 </body>
 </html>

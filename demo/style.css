@@ -51,6 +51,16 @@ header {
   padding:5px 10px;
   border-radius:100px;
 }
+.header-right {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.lang {
+  padding:4px 10px;
+  border-radius:100px;
+  font-size:12px;
+}
 .intro {
   padding:52px 0 26px;
 }
