@@ -1,0 +1,32 @@
+{
+  "name": "base2300",
+  "version": "0.1.0",
+  "description": "An exploratory Unicode encoding that optimizes character count, with 2,300 symbols and optional compression experiments.",
+  "type": "module",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/fricklik/base2300.git" },
+  "homepage": "https://github.com/fricklik/base2300#readme",
+  "bugs": { "url": "https://github.com/fricklik/base2300/issues" },
+  "engines": { "node": ">=22" },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./experimental": { "types": "./dist/experimental.d.ts", "import": "./dist/experimental.js" },
+    "./package.json": "./package.json"
+  },
+  "bin": { "base2300": "./bin/base2300.mjs" },
+  "files": ["dist", "src", "bin", "LICENSE", "NOTICE", "licenses", "README.md", "README.ja.md", "docs/format-v1.md", "docs/format-experimental.md"],
+  "sideEffects": false,
+  "keywords": ["base2300", "unicode", "encoding", "character-count", "experimental", "japanese"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "check": "npm run typecheck && npm test",
+    "test": "npm run build && node --test test/*.test.mjs",
+    "benchmark": "npm run build && node bench/run.mjs",
+    "demo": "npm run build && node scripts/serve-demo.mjs",
+    "prepack": "npm run build"
+  },
+  "devDependencies": { "typescript": "5.9.3" }
+}

@@ -1,0 +1,23 @@
+Base2300 originated in an earlier private project by the same author and was
+extracted into this standalone repository. The original project is not
+published; this repository is the reference source for the format.
+
+The standalone implementation is distributed under the MIT license (LICENSE).
+The Joyo Kanji data in src/base2200Alphabet.ts derives from Unicode 17.0.0
+Unihan kJoyoKanji=2010 and retains the Unicode-3.0 license, reproduced in
+licenses/unicode-3.0.txt. That notice was copied unchanged from the source
+project. The data's code-point ordering is part of the wire format.
+
+Unicode source:
+https://raw.githubusercontent.com/unicode-org/unicodetools/main/unicodetools/data/ucd/17.0.0/Unihan/kJoyoKanji.txt
+Property definition: https://www.unicode.org/reports/tr38/#kJoyoKanji
+Current upstream license: https://www.unicode.org/license.txt
+
+No backend daemon, LLM weights, external reading dictionary or KANJIDIC2 data
+is distributed by this package. No Unishox, SCSU, Smaz or qntm codec source has
+been incorporated into the library.
+
+Benchmark-only snapshots of qntm's Base2048 and Base32768 are included under
+bench/vendor, under their original MIT licenses. They are not runtime library
+dependencies or part of the npm package. Their source URLs, snapshot hashes,
+license notices and known-answer checks are recorded in bench/vendor/README.md.

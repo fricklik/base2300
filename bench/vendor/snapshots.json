@@ -1,0 +1,26 @@
+[
+  {
+    "name": "base2048",
+    "file": "base2048.mjs",
+    "sha256": "e33c5b956ee531f048cdef7701e4194fdd917a8efee271ee44aa2ee878327080",
+    "sourceUrl": "https://raw.githubusercontent.com/qntm/base2048/main/src/index.js",
+    "repository": "https://github.com/qntm/base2048",
+    "licenseUrl": "https://github.com/qntm/base2048/blob/main/LICENSE.txt",
+    "licenseFile": "base2048-LICENSE.txt",
+    "retrievedOn": "2026-09-15",
+    "upstreamCommit": null,
+    "note": "Source lines captured from the web text view; formatting/blank lines may differ. Algorithm and alphabet unchanged. Snapshot identified by local SHA-256; upstream commit not independently established."
+  },
+  {
+    "name": "base32768",
+    "file": "base32768.mjs",
+    "sha256": "0fbc10b120922ff37d98a3e4c47c4c3c05def5cb03f400f6a8d529eae740c313",
+    "sourceUrl": "https://raw.githubusercontent.com/qntm/base32768/main/src/index.js",
+    "repository": "https://github.com/qntm/base32768",
+    "licenseUrl": "https://github.com/qntm/base32768/blob/main/LICENSE.txt",
+    "licenseFile": "base32768-LICENSE.txt",
+    "retrievedOn": "2026-09-15",
+    "upstreamCommit": null,
+    "note": "Source lines captured from the web text view; formatting/blank lines may differ. Algorithm and alphabet unchanged. Snapshot identified by local SHA-256; upstream commit not independently established."
+  }
+]
