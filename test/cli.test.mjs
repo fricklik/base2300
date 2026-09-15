@@ -2,8 +2,10 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { readFileSync } from 'node:fs';
 
 const cli = fileURLToPath(new URL('../bin/base2300.mjs', import.meta.url));
+const { version } = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 const run = (args, input) => spawnSync(process.execPath, [cli, ...args], { input, timeout: 30000 });
 
 test('CLI round-trips binary and text without adding or trimming newlines', () => {
@@ -27,5 +29,6 @@ test('CLI separates errors from stdout, rejects invalid UTF-8 wire and has help/
     assert.match(result.stderr.toString(), /base2300:/);
   }
   assert.match(run(['--help']).stdout.toString(), /Usage: base2300/);
-  assert.match(run(['--version']).stdout.toString(), /^0\.1\.0\n$/);
+  assert.match(version, /^\d+\.\d+\.\d+$/);
+  assert.equal(run(['--version']).stdout.toString(), `${version}\n`);
 });
