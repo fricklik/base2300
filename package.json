@@ -15,7 +15,7 @@
     "./experimental": { "types": "./dist/experimental.d.ts", "import": "./dist/experimental.js" },
     "./package.json": "./package.json"
   },
-  "bin": { "base2300": "./bin/base2300.mjs" },
+  "bin": { "base2300": "bin/base2300.mjs" },
   "files": ["dist", "src", "bin", "LICENSE", "NOTICE", "licenses", "README.md", "README.ja.md", "docs/format-v1.md", "docs/format-experimental.md"],
   "sideEffects": false,
   "keywords": ["base2300", "unicode", "encoding", "character-count", "experimental", "japanese"],

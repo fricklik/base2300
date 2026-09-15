@@ -31,4 +31,17 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm pack --dry-run
-      - run: npm publish --access public
+      # Idempotent: a tag for a version that is already on the registry (for example the
+      # manually published first release) is verified above but not published again.
+      - name: Skip if this version is already published
+        id: registry
+        run: |
+          VER="$(node -p "require('./package.json').version")"
+          if npm view "base2300@$VER" version >/dev/null 2>&1; then
+            echo "base2300@$VER is already on the registry; skipping publish."
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.registry.outputs.published == 'false'
+        run: npm publish --access public

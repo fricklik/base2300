@@ -49,15 +49,21 @@ silently change an existing alphabet, header assignment or decoder meaning.
 
 npm Trusted Publishing is configured in the package settings on npmjs.com, so
 the package has to exist before it can be enabled. Publish the first version
-from a logged-in machine:
+from a logged-in machine. npm requires two-factor authentication on the account
+for direct publishing (`npm publish` otherwise fails with `E403 ... Two-factor
+authentication ... is required`); enable it under Account → Two-Factor
+Authentication on npmjs.com first.
 
 ```sh
 npm login
 npm run check
 npm pack --dry-run          # review the file list
-npm publish --access public
+npm publish --access public # prompts for the 2FA code
 git tag v0.1.0 && git push origin v0.1.0
 ```
+
+Pushing the tag also triggers `publish.yml`; it verifies the commit and skips
+`npm publish` because the version already exists on the registry.
 
 Then open the package on npmjs.com → Settings → *Trusted Publisher* and add:
 
