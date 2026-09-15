@@ -38,6 +38,22 @@ The checked random-byte example uses **45.8% fewer code points than Base64**, wi
 **59.6% more UTF-8 bytes**. Japanese and emoji examples also show that being
 shorter than Base64 does not ensure being shorter than the original text.
 
+## Install
+
+```sh
+npm install base2300
+```
+
+```js
+import { encode, decode } from 'base2300';
+import { encodeBase2300Advanced } from 'base2300/experimental';
+```
+
+Requires Node.js 22+ (or a browser with `TextEncoder`, `BigInt` and, for the
+native candidates, `CompressionStream`). The package ships ESM, TypeScript
+declarations and the `base2300` CLI. Package version and wire-format version
+are independent; see [releasing](docs/releasing.md).
+
 ## Try the source checkout
 
 Requires Node.js 22+ and npm. Run these commands in this directory:
@@ -53,7 +69,7 @@ UTF-8 bytes, UTF-16 units and graphemes, verifies exact byte recovery, and runs
 conversion in a cancellable Worker. The UI is English by default; a header
 toggle switches to Japanese (`?lang=ja` also works). The demo caps source/decoded bytes at 64 KiB;
 the library caps them at 4 MiB. Encoded text has a separate, larger bound.
-No hosted demo or npm publication is assumed by these instructions.
+There is no hosted demo; run it locally.
 
 ## Basic API: checked v1
 

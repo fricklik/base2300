@@ -81,8 +81,10 @@ the transferred bytes. This is separate from encoded-message size.
   was not validated here. No global npm cache or authentication was modified.
 - The original default npm cache was not writable in this sandbox; using a
   temporary cache allowed the final package build/install checks to succeed.
-- No npm publication, release tag or hosted playground has been created.
-  The repository itself was published later the same day (next section).
+- At extraction time no npm publication, release tag or hosted playground
+  existed. The repository was published later the same day (next section), and
+  `base2300@0.1.0` was published to npm manually on 2026-09-15 from commit
+  `e303c52` (tag `v0.1.0`). No hosted playground exists.
 - `/fable-ask` first failed on both models (exit 3, empty stderr). A second run
   outside the sandbox showed the primary `claude-fable-5` blocked by a monthly
   spend limit; the fallback `claude-opus-4-8[1m]` returned a review. Its claims

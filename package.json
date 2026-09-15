@@ -1,6 +1,6 @@
 {
   "name": "base2300",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "An exploratory Unicode encoding that optimizes character count, with 2,300 symbols and optional compression experiments.",
   "type": "module",
   "license": "MIT",
