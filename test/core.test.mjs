@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import {
   encode, decode, encodeText, decodeText, encodeBase2300Text, encodeBase2300Binary,
   BASE2300_ALPHABET as alphabet, MAX_BASE2300_BYTES, MAX_BASE2300_TEXT_LENGTH, measureText, crc32,
+  BASE64_ALPHABET, JOYO_KANJI, BASE2200_ALPHABET, BASE2300_HIRAGANA, BASE2300_KATAKANA,
 } from '../dist/index.js';
 
 const utf8 = (text) => new TextEncoder().encode(text);
@@ -29,6 +30,15 @@ test('alphabet order, uniqueness, normalization and CRC32 are fixed', () => {
   assert.equal(createHash('sha256').update(alphabet.join('')).digest('hex'), '3161548944eb8347658152a30e41677efe91342755ff8ebdfbcf5151dc1371cf');
   for (const form of ['NFC', 'NFKC']) assert.equal(alphabet.join('').normalize(form), alphabet.join(''));
   assert.equal(crc32(utf8('123456789')), 0xcbf43926);
+});
+
+test('alphabet building blocks are exported and compose the fixed alphabet', () => {
+  assert.equal(BASE64_ALPHABET.length, 64);
+  assert.equal([...JOYO_KANJI].length, 2136);
+  assert.equal(BASE2200_ALPHABET.length, 2200);
+  assert.deepEqual([...BASE2200_ALPHABET], [...BASE64_ALPHABET, ...JOYO_KANJI]);
+  assert.deepEqual([...alphabet], [...BASE2200_ALPHABET, ...BASE2300_HIRAGANA, ...BASE2300_KATAKANA]);
+  assert.ok(Object.isFrozen(BASE2200_ALPHABET));
 });
 
 for (const [hex, wire] of vectors) test(`independent checked vector ${hex || '(empty)'}`, () => {

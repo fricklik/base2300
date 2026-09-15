@@ -25,6 +25,9 @@ package, GitHub release or hosted playground has been published.
 - Translate source, test, demo and script comments from Japanese to English.
   Runtime strings, error messages and the playground UI text are unchanged.
 - Record the public repository, first CI matrix run and browser verification.
+- Export the alphabet building blocks `BASE64_ALPHABET`, `JOYO_KANJI` and
+  `BASE2200_ALPHABET` from the root entry so downstream projects can derive
+  tables without copying the data.
 - Add `prepublishOnly` (runs `npm run check`) and a tag-driven
   `publish.yml` workflow that publishes through npm Trusted Publishing (OIDC).
   The first release is still published manually; see `docs/releasing.md`.

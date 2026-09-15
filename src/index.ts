@@ -10,6 +10,8 @@ export {
   crc32,
 } from "./base2300.js";
 export { BASE2300_ALPHABET, BASE2300_HIRAGANA, BASE2300_KATAKANA } from "./base2300Alphabet.js";
+// Alphabet building blocks, exported so downstream code can build derived tables without copying the data.
+export { BASE64_ALPHABET, JOYO_KANJI, BASE2200_ALPHABET } from "./base2200Alphabet.js";
 
 /** Encode arbitrary bytes; choose the shorter checked text or binary representation. */
 export function encode(input: Uint8Array): string {
