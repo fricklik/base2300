@@ -38,13 +38,14 @@ Reusing those slots would make old saved strings ambiguous. The independent
 library neither sends data to an external service nor claims to reproduce the
 original LLM result.
 
-### Keep the original application intact
+### The original application consumes the package
 
-The standalone source is initially an extraction, with tests and provenance.
-The original application continues to use its own implementation. A later
-integration can replace those imports after package publication and
-cross-project validation. That integration is a separate change; copying future
-fixes between trees needs deliberate review until then.
+The standalone source started as an extraction, with tests and provenance.
+Since 0.1.2 the original application depends on the published npm package for
+every portable codec and keeps only its LLM candidate (marker `き`) and legacy
+Base2200 codec locally, layered on `base2300/experimental`. Fixes to the
+portable formats therefore land here first and reach the application through
+a version bump; there is no second copy of the codec to keep in sync.
 
 ### Treat native compression as capability-dependent
 
